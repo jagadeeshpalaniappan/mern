@@ -14,8 +14,8 @@ function MovieListItem(props) {
           {props.movie.title}
         </Link>
       </h3>
-      <p className={styles['author-name']}><FormattedMessage id="by" /> {props.movie.name}</p>
-      <p className={styles['movie-desc']}>{props.movie.content}</p>
+      <p className={styles['author-name']}><FormattedMessage id="by" /> {props.movie.directors}</p>
+      <p className={styles['movie-desc']}>{props.movie.description}</p>
       <p className={styles['movie-action']}><a href="#" onClick={props.onDelete}><FormattedMessage id="deleteMovie" /></a></p>
       <hr className={styles.divider} />
     </div>
@@ -26,7 +26,7 @@ MovieListItem.propTypes = {
   movie: PropTypes.shape({
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
     slug: PropTypes.string.isRequired,
     cuid: PropTypes.string.isRequired,
   }).isRequired,

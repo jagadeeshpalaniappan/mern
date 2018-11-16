@@ -17,9 +17,9 @@ export function addMovieRequest(movie) {
   return (dispatch) => {
     return callApi('movies', 'POST', {
       movie: {
-        name: movie.name,
         title: movie.title,
-        content: movie.content,
+        directors: movie.directors,
+        description: movie.description,
       },
     }).then(res => dispatch(addMovie(res.movie)));
   };
@@ -55,6 +55,6 @@ export function deleteMovie(cuid) {
 
 export function deleteMovieRequest(cuid) {
   return (dispatch) => {
-    return callApi(`movies/${cuid}`, 'delete').then(() => dispatch(deleteMovie(cuid)));
+    return callApi(`movies/${cuid}`, 'DELETE').then(() => dispatch(deleteMovie(cuid)));
   };
 }

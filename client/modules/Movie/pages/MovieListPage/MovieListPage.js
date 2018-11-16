@@ -25,9 +25,9 @@ class MovieListPage extends Component {
     }
   };
 
-  handleAddMovie = (name, title, content) => {
+  handleAddMovie = (title, directors, description) => {
     this.props.dispatch(toggleAddMovie());
-    this.props.dispatch(addMovieRequest({ name, title, content }));
+    this.props.dispatch(addMovieRequest({ title, directors, description }));
   };
 
   render() {
@@ -53,7 +53,7 @@ function mapStateToProps(state) {
 
 MovieListPage.propTypes = {
   movies: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    directors: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
   })).isRequired,

@@ -12,7 +12,7 @@ function MovieList(props) {
           <MovieListItem
             movie={movie}
             key={movie.cuid}
-            onDelete={() => props.handleDeleteMovie(movie.cuid)}
+            onDelete={() => props.handleDeleteMovie(movie.id)}
           />
         ))
       }

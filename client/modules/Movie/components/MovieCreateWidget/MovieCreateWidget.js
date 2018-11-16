@@ -7,11 +7,13 @@ import styles from './MovieCreateWidget.css';
 
 export class MovieCreateWidget extends Component {
   addMovie = () => {
-    const nameRef = this.refs.name;
+
     const titleRef = this.refs.title;
+    const nameRef = this.refs.name;
     const contentRef = this.refs.content;
+
     if (nameRef.value && titleRef.value && contentRef.value) {
-      this.props.addMovie(nameRef.value, titleRef.value, contentRef.value);
+      this.props.addMovie(titleRef.value, nameRef.value, contentRef.value);
       nameRef.value = titleRef.value = contentRef.value = '';
     }
   };

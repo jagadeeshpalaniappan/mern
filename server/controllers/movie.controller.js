@@ -20,7 +20,7 @@ export function getMovies(req, res) {
 }
 
 
-function getDummyMovie(id, title, directorName, description) {
+function getDummyMovie(id, title, directors, description) {
 
   return {
     "id": id,
@@ -41,7 +41,7 @@ function getDummyMovie(id, title, directorName, description) {
       "Jeanne Fusier-Gir"
     ],
     "directors": [
-      directorName
+      directors
     ],
     "tags": [
       "Action",
@@ -84,7 +84,7 @@ export function addMovie(req, res) {
     res.status(403).end();
   }
 
-  const movie = getDummyMovie(cuid(), req.body.movie.title, req.body.movie.name, req.body.movie.content);
+  const movie = getDummyMovie(cuid(), req.body.movie.title, req.body.movie.directors, req.body.movie.description);
   const newMovie = new Movie(movie);
 
   newMovie.save((err, saved) => {
@@ -117,7 +117,7 @@ export function getMovie(req, res) {
  * @returns void
  */
 export function deleteMovie(req, res) {
-  Movie.findOne({ id: req.params.cuid }).exec((err, movie) => {
+  Movie.findOne({ id: req.params.id }).exec((err, movie) => {
     if (err) {
       res.status(500).send(err);
     }
