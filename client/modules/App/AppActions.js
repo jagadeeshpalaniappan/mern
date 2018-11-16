@@ -1,9 +1,9 @@
 // Export Constants
-export const TOGGLE_ADD_POST = 'TOGGLE_ADD_POST';
+export const TOGGLE_ADD_MOVIE = 'TOGGLE_ADD_MOVIE';
 
 // Export Actions
-export function toggleAddPost() {
+export function toggleAddMovie() {
   return {
-    type: TOGGLE_ADD_POST,
+    type: TOGGLE_ADD_MOVIE,
   };
 }

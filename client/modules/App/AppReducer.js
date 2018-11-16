@@ -1,16 +1,16 @@
 // Import Actions
-import { TOGGLE_ADD_POST } from './AppActions';
+import { TOGGLE_ADD_MOVIE } from './AppActions';
 
 // Initial State
 const initialState = {
-  showAddPost: false,
+  showAddMovie: false,
 };
 
 const AppReducer = (state = initialState, action) => {
   switch (action.type) {
-    case TOGGLE_ADD_POST:
+    case TOGGLE_ADD_MOVIE:
       return {
-        showAddPost: !state.showAddPost,
+        showAddMovie: !state.showAddMovie,
       };
 
     default:
@@ -20,8 +20,8 @@ const AppReducer = (state = initialState, action) => {
 
 /* Selectors */
 
-// Get showAddPost
-export const getShowAddPost = state => state.app.showAddPost;
+// Get showAddMovie
+export const getShowAddMovie = state => state.app.showAddMovie;
 
 // Export Reducer
 export default AppReducer;
