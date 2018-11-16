@@ -24,11 +24,10 @@ function MovieListItem(props) {
 
 MovieListItem.propTypes = {
   movie: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-    cuid: PropTypes.string.isRequired,
+    directors: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
 };

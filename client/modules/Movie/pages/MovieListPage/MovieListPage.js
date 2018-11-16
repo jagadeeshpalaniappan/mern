@@ -53,9 +53,9 @@ function mapStateToProps(state) {
 
 MovieListPage.propTypes = {
   movies: PropTypes.arrayOf(PropTypes.shape({
-    directors: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
+    directors: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
   })).isRequired,
   showAddMovie: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
