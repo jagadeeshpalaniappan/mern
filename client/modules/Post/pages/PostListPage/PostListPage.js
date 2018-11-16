@@ -20,7 +20,7 @@ class PostListPage extends Component {
   }
 
   handleDeletePost = post => {
-    if (confirm('Do you want to delete this post')) { // eslint-disable-line
+    if (confirm('Do you want to delete this movie')) { // eslint-disable-line
       this.props.dispatch(deletePostRequest(post));
     }
   };
