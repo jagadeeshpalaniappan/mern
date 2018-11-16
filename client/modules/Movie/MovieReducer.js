@@ -28,7 +28,7 @@ const MovieReducer = (state = initialState, action) => {
 /* Selectors */
 
 // Get all movies
-export const getMovies = state => state.movies.data;
+export const getMovies = state => state.movies.data || [];
 
 // Get movie by cuid
 export const getMovie = (state, cuid) => state.movies.data.filter(movie => movie.cuid === cuid)[0];

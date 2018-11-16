@@ -15,7 +15,7 @@ export function addMovie(movie) {
 
 export function addMovieRequest(movie) {
   return (dispatch) => {
-    return callApi('movies', 'movie', {
+    return callApi('movies', 'POST', {
       movie: {
         name: movie.name,
         title: movie.title,

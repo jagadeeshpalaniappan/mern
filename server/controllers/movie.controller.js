@@ -5,7 +5,7 @@ import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
 
 /**
- * Get all posts
+ * Get all movies
  * @param req
  * @param res
  * @returns void
@@ -15,7 +15,7 @@ export function getMovies(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    res.json({ posts: movies });
+    res.json({ movies });
   });
 }
 
@@ -106,7 +106,7 @@ export function getMovie(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    res.json({ movie: movie });
+    res.json({ movie });
   });
 }
 
