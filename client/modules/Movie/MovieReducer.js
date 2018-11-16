@@ -17,7 +17,7 @@ const MovieReducer = (state = initialState, action) => {
 
     case DELETE_MOVIE :
       return {
-        data: state.data.filter(movie => movie.cuid !== action.cuid),
+        data: state.data.filter(movie => movie.id !== action.id),
       };
 
     default:
@@ -28,7 +28,7 @@ const MovieReducer = (state = initialState, action) => {
 /* Selectors */
 
 // Get all movies
-export const getMovies = state => state.movies.data || [];
+export const getMovies = state => state.movies.data;
 
 // Get movie by cuid
 export const getMovie = (state, cuid) => state.movies.data.filter(movie => movie.cuid === cuid)[0];

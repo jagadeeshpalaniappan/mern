@@ -80,7 +80,7 @@ function getDummyMovie(id, title, directors, description) {
  * @returns void
  */
 export function addMovie(req, res) {
-  if (!req.body.movie.name || !req.body.movie.title || !req.body.movie.content) {
+  if (!req.body.movie.title || !req.body.movie.directors || !req.body.movie.description) {
     res.status(403).end();
   }
 
