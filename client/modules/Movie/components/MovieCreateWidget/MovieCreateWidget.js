@@ -10,10 +10,6 @@ export class MovieCreateWidget extends Component {
 
   addMovie = () => {
 
-    // const titleRef = this.refs.title;
-    const nameRef = this.refs.name;
-    const contentRef = this.refs.content;
-
     const typeRef = this.refs.type;
     const titleRef = this.refs.title;
     const durationRef = this.refs.duration;
