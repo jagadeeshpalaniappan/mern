@@ -57,7 +57,7 @@ export class MovieCreateWidget extends Component {
       channel_name: channel_nameRef.value,
     });
 
-
+    // Validation: TODO
     /*
     if (nameRef.value && titleRef.value && contentRef.value) {
       this.props.addMovie(titleRef.value, nameRef.value, contentRef.value);
