@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 
 const movieSchema = new Schema({
   id: { type: 'String', required: false },
+
+  // tubi: model
   type: { type: 'String', required: false },
   title: { type: 'String', required: false },
   duration: { type: 'Number', required: false },
@@ -24,6 +26,9 @@ const movieSchema = new Schema({
   channel_id: { type: 'String', required: false },
   channel_logo: { type: 'String', required: false },
   channel_name: { type: 'String', required: false },
+
+  // xtra: model
+  language: { type: 'String', required: false },
 
   dateAdded: { type: 'Date', default: Date.now, required: false },
 });

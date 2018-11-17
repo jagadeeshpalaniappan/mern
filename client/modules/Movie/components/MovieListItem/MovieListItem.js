@@ -46,6 +46,7 @@ class MovieListItem  extends  React.Component{
 
         <ul className={styles['movie-more-info']} hidden={this.state.moreInfoHidden}>
 
+          <li className={styles['movie-desc']}> <strong>language: </strong>{props.movie.language}</li>
           <li className={styles['movie-desc']}> <strong>id: </strong>{props.movie.id}</li>
           <li className={styles['movie-desc']}> <strong>type: </strong>{props.movie.type}</li>
           <li className={styles['movie-desc']}> <strong>title: </strong>{props.movie.title}</li>

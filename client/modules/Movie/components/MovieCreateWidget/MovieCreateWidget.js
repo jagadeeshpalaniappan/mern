@@ -31,6 +31,7 @@ export class MovieCreateWidget extends Component {
     const channel_idRef = this.refs.channel_id;
     const channel_logoRef = this.refs.channel_logo;
     const channel_nameRef = this.refs.channel_name;
+    const languageRef = this.refs.language;
 
 
     this.props.addMovie({
@@ -55,6 +56,7 @@ export class MovieCreateWidget extends Component {
       channel_id: channel_idRef.value,
       channel_logo: channel_logoRef.value,
       channel_name: channel_nameRef.value,
+      language: languageRef.value
     });
 
     // Validation: TODO
@@ -108,6 +110,18 @@ export class MovieCreateWidget extends Component {
           <a className={styles['movie-submit-button']} onClick={this.addMovie}><FormattedMessage id="submit" /></a>
 
           <h2 className={styles['form-title']}><FormattedMessage id="createNewMovie" /></h2>
+
+          <select ref="language" className={styles['form-field']}>
+            <option value="tamil">Tamil</option>
+            <option value="telugu">Telugu</option>
+            <option value="hindi">Hindi</option>
+            <option value="malayalam">Malayalam</option>
+            <option value="kanada">Kanada</option>
+            <option value="bengali">Bengali</option>
+            <option value="marathi">Marathi</option>
+            <option value="punjabi">Punjabi</option>
+            <option value="chinese">Chinese</option>
+          </select>
 
           <input placeholder={this.props.intl.messages.type} className={styles['form-field']} ref="type" />
           <input placeholder={this.props.intl.messages.movieTitle} className={styles['form-field']} ref="title" />
