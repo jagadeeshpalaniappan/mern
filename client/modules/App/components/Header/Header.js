@@ -25,7 +25,7 @@ export function Header(props, context) {
         </h1>
         {
           context.router.isActive('/', true)
-            ? <a className={styles['add-movie-button']} href="#" onClick={props.toggleAddMovie}><FormattedMessage id="addMovie" /></a>
+            ? <a className={styles['add-movie-button']} onClick={props.toggleAddMovie}><FormattedMessage id="addMovie" /></a>
             : null
         }
       </div>
