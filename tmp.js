@@ -56,6 +56,6 @@ const movie = getDummyMovie('11', '22', '33');
 
 Object.keys(movie).forEach(function (key) {
   // console.log(`const ${key}Ref = this.refs.${key};`);
-  console.log('this.refs.'+key+'.value = `'+key+'${counter}`;');
+  console.log("<li className={styles['movie-desc']}> <strong>"+key+": </strong>{props.movie."+key+"}</li>");
 });
 

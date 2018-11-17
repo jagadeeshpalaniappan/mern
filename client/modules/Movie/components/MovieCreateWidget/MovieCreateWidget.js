@@ -104,8 +104,8 @@ export class MovieCreateWidget extends Component {
       <div className={cls}>
         <div className={styles['form-content']}>
 
-          <a className={styles['movie-submit-button']} href="#" onClick={this.populateDummyMovie}>Populate Dummy Values</a>
-          <a className={styles['movie-submit-button']} href="#" onClick={this.addMovie}><FormattedMessage id="submit" /></a>
+          <a className={styles['movie-submit-button']} onClick={this.populateDummyMovie}>Populate Dummy Values</a> | &nbsp;
+          <a className={styles['movie-submit-button']} onClick={this.addMovie}><FormattedMessage id="submit" /></a>
 
           <h2 className={styles['form-title']}><FormattedMessage id="createNewMovie" /></h2>
 
@@ -134,7 +134,7 @@ export class MovieCreateWidget extends Component {
           <input placeholder={this.props.intl.messages.channel_name} className={styles['form-field']} ref="channel_name" />
 
 
-          <a className={styles['movie-submit-button']} href="#" onClick={this.addMovie}><FormattedMessage id="submit" /></a>
+          <a className={styles['movie-submit-button']} onClick={this.addMovie}><FormattedMessage id="submit" /></a>
 
         </div>
       </div>
