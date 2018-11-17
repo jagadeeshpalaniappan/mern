@@ -42,10 +42,10 @@ export function fetchMovie(cuid) {
   };
 }
 
-export function deleteMovie(cuid) {
+export function deleteMovie(id) {
   return {
     type: DELETE_MOVIE,
-    cuid,
+    id,
   };
 }
 
