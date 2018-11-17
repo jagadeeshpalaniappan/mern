@@ -3,6 +3,7 @@ import Movie from '../models/movie';
 import cuid from 'cuid';
 import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
+import Post from "../models/post";
 
 /**
  * Get all movies
@@ -80,15 +81,25 @@ function getDummyMovie(id, title, directors, description) {
  * @returns void
  */
 export function addMovie(req, res) {
+
+  // validation : TODO
+  /*
   if (!req.body.movie.title || !req.body.movie.directors || !req.body.movie.description) {
     res.status(403).end();
   }
+  */
 
-  const movie = getDummyMovie(cuid(), req.body.movie.title, req.body.movie.directors, req.body.movie.description);
-  const newMovie = new Movie(movie);
+  // const movie = getDummyMovie(cuid(), req.body.movie.title, req.body.movie.directors, req.body.movie.description);
+  // const newMovie = new Movie(movie);
+
+  const newMovie = new Movie(req.body.movie);
+  newMovie.id = cuid();
 
   newMovie.save((err, saved) => {
     if (err) {
+      console.log('###### err');
+      console.log(err);
+
       res.status(500).send(err);
     }
     res.json({ movie: saved });

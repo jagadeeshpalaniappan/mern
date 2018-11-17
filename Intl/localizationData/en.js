@@ -27,5 +27,29 @@ export default {
     	  =1 {has # comment}
     	  other {has # comments}
     	} as of {date}`,
+
+    type: 'type',
+    title: 'title',
+    duration: 'duration',
+    ratings: 'ratings',
+    actors: 'actors',
+    directors: 'directors',
+    tags: 'tags',
+    description: 'description',
+    year: 'year',
+    posterarts: 'posterarts',
+    thumbnails: 'thumbnails',
+    hero_images: 'hero_images',
+    landscape_images: 'landscape_images',
+    backgrounds: 'backgrounds',
+    publisher_id: 'publisher_id',
+    has_trailer: 'has_trailer',
+    has_subtitle: 'has_subtitle',
+    import_id: 'import_id',
+    channel_id: 'channel_id',
+    channel_logo: 'channel_logo',
+    channel_name: 'channel_name'
+
+
   },
 };

@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const movieSchema = new Schema({
-  id: { type: 'String', required: true },
-  type: { type: 'String', required: true },
-  title: { type: 'String', required: true },
+  id: { type: 'String', required: false },
+  type: { type: 'String', required: false },
+  title: { type: 'String', required: false },
   duration: { type: 'Number', required: false },
   ratings: { type: 'Array' , default : [], required: false },
   actors: { type: ['String'], required: false },
@@ -27,8 +27,6 @@ const movieSchema = new Schema({
 
   dateAdded: { type: 'Date', default: Date.now, required: false },
 });
-
-
 
 
 export default mongoose.model('Movie', movieSchema);

@@ -25,9 +25,9 @@ class MovieListPage extends Component {
     }
   };
 
-  handleAddMovie = (title, directors, description) => {
+  handleAddMovie = (movie) => {
     this.props.dispatch(toggleAddMovie());
-    this.props.dispatch(addMovieRequest({ title, directors, description }));
+    this.props.dispatch(addMovieRequest(movie));
   };
 
   render() {
