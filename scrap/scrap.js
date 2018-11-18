@@ -2,6 +2,10 @@ const fs = require('fs');
 const cuid = require('cuid');
 const {getPageVideoUrl} = require('./geturl');
 
+const args = process.argv.slice(2);
+const lang = args[0];
+
+
 
 
 function timeout(ms) {
@@ -27,11 +31,11 @@ function getAllMovies(tamilMovies) {
 
 
 
-function readFile(lang) {
+function readFile() {
 
   console.log('lang:'+lang);
 
-  fs.readFile('./'+lang+'.json', (err, data) => {
+  fs.readFile('./'+lang+'10.json', (err, data) => {
     if (err) throw err;
     let tamilMovies = JSON.parse(data);
     const allMovies = getAllMovies(tamilMovies);
@@ -105,8 +109,8 @@ function writeMovie(allMoviesFinalStruct, failedMovies) {
 }
 
 
-const args = process.argv.slice(2);
-readFile(args[0]);
+
+readFile();
 
 
 
