@@ -56,7 +56,7 @@ function parseHTML(body) {
   // console.log("ejpingables: " + ejpingables);
 
 
-  return { csrfToken: page_id, ejpingables: ejpingables };
+  return {csrfToken: page_id, ejpingables: ejpingables};
 }
 
 
@@ -123,13 +123,13 @@ const jsoncrypto = function () {
       , n = Buffer.from(i, 'base64').toString();
     return JSON.parse(n)
   },
-  this.encrypt = function (t) {
-    var i = 10
-      , n = JSON.stringify(t)
-      // , o = window.btoa(n);
-      , o = Buffer.from(n).toString('base64');
-    return o.slice(0, i) + e(2) + o.slice(i + 1) + o.slice(i, i + 1)
-  }
+    this.encrypt = function (t) {
+      var i = 10
+        , n = JSON.stringify(t)
+        // , o = window.btoa(n);
+        , o = Buffer.from(n).toString('base64');
+      return o.slice(0, i) + e(2) + o.slice(i + 1) + o.slice(i, i + 1)
+    }
 };
 
 
@@ -158,18 +158,16 @@ function getPageVideoUrl(url) {
             // console.log("POST: success");
             // console.log(body);
 
-            const encodedUrl = body['Data']['EJLinks'];
-            if (encodedUrl) {
-
+            if (body && body['Data'] && body['Data']['EJLinks']) {
+              const encodedUrl = body['Data']['EJLinks'];
               // console.log("got: encodedUrl");
-
               const decodedUrlConfig = decodeUrl(encodedUrl);
               // console.log(decodedUrlConfig);
               resolve(decodedUrlConfig);
+
             } else {
               reject(body);
             }
-
           })
           .catch(function (err) {
             // console.log("POST: err", err);

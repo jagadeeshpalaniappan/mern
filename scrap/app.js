@@ -8,8 +8,9 @@ var fs = require('fs');
 tr.TorControlPort.password = 'hellopassword';
 
 
-function makeRequestTor(pageNo, resolve, reject) {
-  var url = 'https://einthusan.tv/movie/results/?find=Recent&lang=tamil&page='+pageNo;
+function makeRequestTor(pageNo, resolve, reject, lang) {
+
+  var url = 'https://einthusan.tv/movie/results/?find=Recent&lang='+lang+'&page='+pageNo;
   var headers = {'Accept-Encoding': 'gzip'};
 
   tr.newTorSession((err) => {
@@ -34,34 +35,6 @@ function makeRequestTor(pageNo, resolve, reject) {
 
 }
 
-// makeRequestTor();
-
-
-/*
-
-function makeRequest(pageNo, resolve, reject) {
-  var url = 'https://einthusan.tv/movie/results/?find=Recent&lang=tamil&page='+pageNo;
-  var headers = {'Accept-Encoding': 'gzip'};
-  var response = request(url, headers);
-  gunzipJSON(response, pageNo, resolve, reject);
-}
-
-function gunzipJSON(response, pageNo, resolve, reject) {
-
-  var gunzip = zlib.createGunzip();
-  var html = "";
-
-  gunzip.on('data', function (data) {
-    html += data.toString();
-  });
-
-  gunzip.on('end', function () {
-    parseHTML(html, pageNo, resolve, reject);
-  });
-
-  response.pipe(gunzip);
-}
-*/
 
 
 function handleBlock1($, liEle, movieData) {
@@ -240,14 +213,17 @@ const performAsyncOperation = function (pageNo) {
 
 
 
-async function getAllPages(lastPageNo) {
+async function getAllPages(lastPageNo, lang) {
+
+  console.log('lastPageNo:'+ lastPageNo);
+  console.log('lang:'+ lang);
 
   const allMoviesByPage ={};
 
   for (let i = 1; i<= lastPageNo; i++) {
     console.log('--------------------'+i);
     const promise = new Promise(function (resolve, reject) {
-      makeRequestTor(i, resolve, reject);
+      makeRequestTor(i, resolve, reject, lang);
     });
     await promise;
     promise.then(function (data) {
@@ -259,7 +235,7 @@ async function getAllPages(lastPageNo) {
 
   const allMoviesByPageStr =JSON.stringify(allMoviesByPage);
   // console.log(allMoviesByPageStr);
-  fs.writeFile('tamil.json', allMoviesByPageStr, 'utf8', function (err, data) {
+  fs.writeFile(lang + '.json', allMoviesByPageStr, 'utf8', function (err, data) {
     if (err) throw err;
     console.log('DONE');
   });
@@ -268,5 +244,9 @@ async function getAllPages(lastPageNo) {
 
 
 // getAllPages(2);
-getAllPages(215);
+// getAllPages(123, 'telugu');
+
+const args = process.argv.slice(2);
+
+getAllPages(parseInt(args[1]), args[0]);
 

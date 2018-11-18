@@ -27,9 +27,11 @@ function getAllMovies(tamilMovies) {
 
 
 
-function readFile() {
+function readFile(lang) {
 
-  fs.readFile('./tamil.json', (err, data) => {
+  console.log('lang:'+lang);
+
+  fs.readFile('./'+lang+'.json', (err, data) => {
     if (err) throw err;
     let tamilMovies = JSON.parse(data);
     const allMovies = getAllMovies(tamilMovies);
@@ -44,50 +46,67 @@ async function addVideoLinkToMoviesAndWrite (allMovies) {
 
   const allMoviesFinalStruct = [];
 
-  const moviesNotHasUrl = [];
+  const failedMovies = [];
 
   let count = 0;
 
   for (const eachMovie of allMovies) {
     if (eachMovie.enLink) {
-      const url = 'https://einthusan.tv' + eachMovie.enLink;
 
-      console.log((count++) + '--------------'+url);
-      const eachMovieVideoUrl = await getPageVideoUrl(url);
-      eachMovie.videoUrl = eachMovieVideoUrl;
-      console.log(eachMovieVideoUrl);
+      try {
 
-      eachMovie.id  = cuid();
+        const url = 'https://einthusan.tv' + eachMovie.enLink;
 
-      allMoviesFinalStruct.push(eachMovie);
-      console.log(count + '--------------/'+url);
+        console.log((count++) + '--------------'+url);
+        const eachMovieVideoUrl = await getPageVideoUrl(url);
+        eachMovie.videoUrl = eachMovieVideoUrl;
+        console.log(eachMovieVideoUrl);
 
-      await timeout(3000);
+        eachMovie.id  = cuid();
+
+        allMoviesFinalStruct.push(eachMovie);
+        console.log(count + '--------------/'+url);
+
+        await timeout(3000);
+
+      } catch(e) {
+        failedMovies.push(eachMovie);
+      }
 
     } else {
-      moviesNotHasUrl.push(eachMovie);
+      failedMovies.push(eachMovie);
     }
 
   }
 
-  writeMovie(allMoviesFinalStruct);
+  writeMovie(allMoviesFinalStruct, failedMovies);
 
 }
 
 
 
-function writeMovie(allMoviesFinalStruct) {
+function writeMovie(allMoviesFinalStruct, failedMovies) {
 
   const allMoviesByPageStr =JSON.stringify(allMoviesFinalStruct);
-  fs.writeFile('tamil.final.json', allMoviesByPageStr, 'utf8', function (err, data) {
+
+  fs.writeFile(lang+'.final.json', allMoviesByPageStr, 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
 
+
+  if (failedMovies.length > 0) {
+    const failedMoviesStr =JSON.stringify(failedMovies);
+    fs.writeFile(lang+'.failed.json', failedMoviesStr, 'utf8', function (err, data) {
+      if (err) throw err;
+      console.log('WRITE: FAILURE DONE');
+    });
+  }
 }
 
 
-readFile();
+const args = process.argv.slice(2);
+readFile(args[0]);
 
 
 
