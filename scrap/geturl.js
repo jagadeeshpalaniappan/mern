@@ -7,16 +7,36 @@ var fs = require('fs');
 var querystring = require('querystring');
 
 
+tr.TorControlPort.password = 'hellopassword';
+
 function getHtmlContent(url, cookieJar) {
 
-  var options = {
-    "url": url,
-    "gzip": true,
-    "method": "GET",
-    jar: cookieJar
-  };
+  return new Promise(function (resolve, reject) {
 
-  return rp(options);
+    var options = {
+      "url": url,
+      "gzip": true,
+      "method": "GET",
+      jar: cookieJar
+    };
+
+    tr.newTorSession((err) => {
+
+      // console.log(err);
+
+      tr.request(options, function (err, res, body) {
+        if (!err && res.statusCode == 200) {
+          resolve(body);
+        } else {
+          resolve(err);
+        }
+      });
+
+    });
+
+  });
+
+  // return rp(options);
 }
 
 function parseHTML(body) {
@@ -75,7 +95,17 @@ function getEncodedUrl(csrfToken, ejpingables, movie_page_url, cookieJar) {
     jar: cookieJar
   };
 
-  return rp(options);
+  // return rp(options);
+
+  return new Promise(function (resolve, reject) {
+    tr.request(options, function (err, res, body) {
+      if (!err && res.statusCode == 200) {
+        resolve(body);
+      } else {
+        resolve(err);
+      }
+    });
+  });
 
 }
 
