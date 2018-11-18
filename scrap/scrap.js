@@ -35,10 +35,12 @@ function readFile() {
 
   console.log('lang:'+lang);
 
-  fs.readFile('./'+lang+'10.json', (err, data) => {
+  fs.readFile('./'+lang+'.json', (err, data) => {
     if (err) throw err;
     let tamilMovies = JSON.parse(data);
     const allMovies = getAllMovies(tamilMovies);
+
+    console.log('No of Records to Process: '+allMovies.length);
 
     addVideoLinkToMoviesAndWrite(allMovies);
 
@@ -91,6 +93,8 @@ async function addVideoLinkToMoviesAndWrite (allMovies) {
 
 function writeMovie(allMoviesFinalStruct, failedMovies) {
 
+  console.log('No of Records (Success): '+allMoviesFinalStruct.length);
+
   const allMoviesByPageStr =JSON.stringify(allMoviesFinalStruct);
 
   fs.writeFile(lang+'.final.json', allMoviesByPageStr, 'utf8', function (err, data) {
@@ -98,6 +102,7 @@ function writeMovie(allMoviesFinalStruct, failedMovies) {
     console.log('WRITE: DONE');
   });
 
+  console.log('No of Records (Failed): '+failedMovies.length);
 
   if (failedMovies.length > 0) {
     const failedMoviesStr =JSON.stringify(failedMovies);
