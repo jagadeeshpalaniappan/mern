@@ -29,7 +29,7 @@ function getAllMovies(tamilMovies) {
 
 function readFile() {
 
-  fs.readFile('./tamil10.json', (err, data) => {
+  fs.readFile('./tamil.json', (err, data) => {
     if (err) throw err;
     let tamilMovies = JSON.parse(data);
     const allMovies = getAllMovies(tamilMovies);
@@ -46,11 +46,13 @@ async function addVideoLinkToMoviesAndWrite (allMovies) {
 
   const moviesNotHasUrl = [];
 
+  let count = 0;
+
   for (const eachMovie of allMovies) {
     if (eachMovie.enLink) {
       const url = 'https://einthusan.tv' + eachMovie.enLink;
 
-      console.log('--------------'+url);
+      console.log((count++) + '--------------'+url);
       const eachMovieVideoUrl = await getPageVideoUrl(url);
       eachMovie.videoUrl = eachMovieVideoUrl;
       console.log(eachMovieVideoUrl);
@@ -58,7 +60,7 @@ async function addVideoLinkToMoviesAndWrite (allMovies) {
       eachMovie.id  = cuid();
 
       allMoviesFinalStruct.push(eachMovie);
-      console.log('--------------/'+url);
+      console.log(count + '--------------/'+url);
 
       await timeout(3000);
 
