@@ -64,7 +64,7 @@ async function getMp4VideoUrl (allMovies) {
 
         const url = 'https://einthusan.tv' + eachMovie.enLink;
 
-        console.log((count++) + '--------------'+url);
+        console.log((count) + '--------------'+url);
         const eachMovieVideoUrl = await getPageVideoUrl(url);
         eachMovie.videoUrl = eachMovieVideoUrl;
         console.log(eachMovieVideoUrl);
@@ -82,7 +82,9 @@ async function getMp4VideoUrl (allMovies) {
             failedMoviesToUpload.push(obj);
           });
 
-        console.log(count + '--------------/'+url);
+        console.log((count) + '--------------/'+url);
+
+        count++;
 
         // await timeout(3000);
 
@@ -105,7 +107,7 @@ function getEachMovieAndUploadToS3(eachMovie) {
 
   return new Promise(function (resolve, reject) {
 
-    console.log('U:' + eachMovie.enLink);
+    // console.log('U:' + eachMovie.enLink);
 
     var keyName = eachMovie.id + '.mp4';
 
@@ -113,20 +115,16 @@ function getEachMovieAndUploadToS3(eachMovie) {
 
       var srcUrl = eachMovie.videoUrl['MP4Link'];
 
-      console.log('USTART: ---------srcUrl:' + eachMovie.enLink);
+      console.log('UPLOAD: START');
 
       getBytesAndUploadToS3(srcUrl, keyName)
         .then(function (obj) {
-
-          console.log('UDONE: ---------srcUrl:' + eachMovie.enLink);
+          console.log('UPLOAD: DONE');
           resolve({eachMovie: eachMovie, isSucess: true });
         })
         .catch(function (obj) {
-
-          console.log('UERR: ---------srcUrl:' + eachMovie.enLink);
-
+          console.log('UPLOAD: ERR');
           reject({eachMovie: eachMovie, isSucess: false });
-
         });
 
     } else {
