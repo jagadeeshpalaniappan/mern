@@ -27,12 +27,12 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
 
   uploader.on('data', function (bytesRead) {
     // console.log(bytesRead, ' bytes read.');
-    // process.stdout.write(".");
+    // process.stdout.write("r");
   });
 
   uploader.on('part', function (number) {
     // console.log('Part ', number, ' uploaded.');
-    // process.stdout.write("##");
+    process.stdout.write(".");
   });
 
   // All parts uploaded, but upload not yet acknowledged.
