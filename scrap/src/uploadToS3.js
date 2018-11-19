@@ -14,7 +14,8 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
     },
     {
       Bucket: 'indiantv',
-      Key: keyName
+      Key: keyName,
+      ACL:'public-read'
     },
     {
       concurrentParts: 20,
@@ -67,16 +68,11 @@ function getBytesAndUploadToS3(srcUrl, keyName) {
     var rStream1 = tr.request(options, function (err, res, body) {
       if (!err && res.statusCode == 200) {
         // resolve(body);
-
-        console.log('DONE');
-
-        // uploadToS3(body);
-
-
+        console.log('MP4-CONNECT:DONE');
       } else {
         // resolve(err);
-        console.log('ERR');
-        console.log(err);
+        console.log('MP4-CONNECT:ERR');
+        // console.log(err);
       }
     });
 
