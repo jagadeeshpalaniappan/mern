@@ -1,11 +1,14 @@
 const fs = require('fs');
 const cuid = require('cuid');
-var promiseLimit = require('promise-limit')
+var promiseLimit = require('promise-limit');
 
+const {getPageVideoUrl} = require('./geturl');
 const {getBytesAndUploadToS3} = require('./uploadToS3');
 
 const args = process.argv.slice(2);
 const lang = args[0];
+const pageNo = args[1];
+
 
 
 /*
@@ -16,6 +19,133 @@ function timeout(ms) {
 }
 */
 
+
+
+function getRequiredMovies(tamilMovies) {
+  var pageNoStr = 'page'+pageNo;
+  return tamilMovies[pageNoStr];
+}
+
+
+
+
+function readFile() {
+
+  console.log('lang:'+lang);
+
+  fs.readFile('../enMetaData/'+lang+'.json', (err, data) => {
+    if (err) throw err;
+    let tamilMovies = JSON.parse(data);
+    const allMovies = getRequiredMovies(tamilMovies);
+
+    console.log('No of Records to Process: '+allMovies.length);
+
+    getMp4VideoUrl(allMovies);
+
+  });
+
+}
+
+
+async function getMp4VideoUrl (allMovies) {
+
+  const sucessMoviesToGetMp4Url = [];
+  const failedMoviesToGetMp4Url = [];
+
+  const sucessMoviesToUpload = [];
+  const failedMoviesToUpload = [];
+
+  let count = 0;
+
+  for (const eachMovie of allMovies) {
+    if (eachMovie.enLink) {
+
+      try {
+
+        const url = 'https://einthusan.tv' + eachMovie.enLink;
+
+        console.log((count++) + '--------------'+url);
+        const eachMovieVideoUrl = await getPageVideoUrl(url);
+        eachMovie.videoUrl = eachMovieVideoUrl;
+        console.log(eachMovieVideoUrl);
+
+        eachMovie.id  = cuid();
+
+        sucessMoviesToGetMp4Url.push(eachMovie);
+
+
+        await getEachMovieAndUploadToS3(eachMovie)
+          .then(function (obj) {
+            sucessMoviesToUpload.push(obj);
+          })
+          .catch(function (obj) {
+            failedMoviesToUpload.push(obj);
+          });
+
+        console.log(count + '--------------/'+url);
+
+        // await timeout(3000);
+
+      } catch(e) {
+        failedMoviesToGetMp4Url.push(eachMovie);
+      }
+
+    } else {
+      failedMoviesToGetMp4Url.push(eachMovie);
+    }
+
+  }
+
+  writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url);
+
+}
+
+
+function getEachMovieAndUploadToS3(eachMovie) {
+
+  return new Promise(function (resolve, reject) {
+
+    console.log('U:' + eachMovie.enLink);
+
+    var enId = eachMovie.enLink.split('/')[3];
+    var lang = eachMovie.enLink.split('=')[1];
+    var iMovieId = enId ? cuid() + '$' + enId : cuid() + '$';
+    var keyName = lang ? iMovieId + '$' + lang : iMovieId;
+
+    if (eachMovie && eachMovie.videoUrl && eachMovie.videoUrl['MP4Link']) {
+
+      var srcUrl = eachMovie.videoUrl['MP4Link'];
+
+      console.log('USTART: ---------srcUrl:' + eachMovie.enLink);
+
+      getBytesAndUploadToS3(srcUrl, keyName)
+        .then(function (obj) {
+
+          console.log('UDONE: ---------srcUrl:' + eachMovie.enLink);
+          resolve({eachMovie: eachMovie, isSucess: true });
+        })
+        .catch(function (obj) {
+
+          console.log('UERR: ---------srcUrl:' + eachMovie.enLink);
+
+          reject({eachMovie: eachMovie, isSucess: false });
+
+        });
+
+    } else {
+
+      reject({eachMovie: eachMovie, isSucess: false });
+
+    }
+
+
+  });
+
+}
+
+
+
+/*
 
 
 function readFile() {
@@ -31,6 +161,7 @@ function readFile() {
   });
 
 }
+*/
 
 
 
@@ -88,7 +219,7 @@ function getAllMoviesAndUploadToS3 (allMovies) {
   const failedRecords = [];
 
 
-  var limit = promiseLimit(10);
+  var limit = promiseLimit(1);
 
   var arrayOfPromises = allMovies.map((eachMovie) => {
     return limit(() => apiRequest(eachMovie))
@@ -123,22 +254,36 @@ function getAllMoviesAndUploadToS3 (allMovies) {
 
 
 
-function writeMovie(allMoviesFinalStruct, failedMovies) {
+function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url) {
 
-  console.log('No of Records (Success): '+allMoviesFinalStruct.length);
+  console.log('No of Records (Success) Upload: '+sucessMoviesToUpload.length);
 
-  const allMoviesByPageStr =JSON.stringify(allMoviesFinalStruct);
+  const allMoviesByPageStr =JSON.stringify(sucessMoviesToUpload);
 
-  fs.writeFile('./upload/'+lang+'.upload.success.json', allMoviesByPageStr, 'utf8', function (err, data) {
+  fs.writeFile('../upload/'+lang+'.upload.success.json', allMoviesByPageStr, 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
 
-  console.log('No of Records (Failed): '+failedMovies.length);
+  console.log('No of Records (Failed) Upload: '+failedMoviesToUpload.length);
 
-  if (failedMovies.length > 0) {
-    const failedMoviesStr =JSON.stringify(failedMovies);
-    fs.writeFile('./upload/'+lang+'.upload.failed.json', failedMoviesStr, 'utf8', function (err, data) {
+  if (failedMoviesToUpload.length > 0) {
+    const failedMoviesStr =JSON.stringify(failedMoviesToUpload);
+    fs.writeFile('../upload/'+lang+'.upload.failed.json', failedMoviesStr, 'utf8', function (err, data) {
+      if (err) throw err;
+      console.log('WRITE: FAILURE DONE');
+    });
+  }
+
+  console.log('No of Records (Success) Mp4 Url: '+sucessMoviesToGetMp4Url.length);
+  fs.writeFile('../upload/'+lang+'.mp4url.success.json', JSON.stringify(sucessMoviesToGetMp4Url), 'utf8', function (err, data) {
+    if (err) throw err;
+    console.log('WRITE: DONE');
+  });
+
+  console.log('No of Records (Failed) Mp4 Url: '+failedMoviesToGetMp4Url.length);
+  if (failedMoviesToUpload.length > 0) {
+    fs.writeFile('../upload/'+lang+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
     });
