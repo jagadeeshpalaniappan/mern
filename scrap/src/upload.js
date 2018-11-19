@@ -251,10 +251,15 @@ function getAllMoviesAndUploadToS3 (allMovies) {
 
 
 
+function getFileBaseName() {
+  return '../upload/'+lang+'.p.'+pageNo+'.'+Date.now();
+}
+
+
 function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url) {
 
   console.log('No of Records (Success) Upload: '+sucessMoviesToUpload.length);
-  fs.writeFile('../upload/'+lang+'.'+Date.now()+'.upload.success.json', JSON.stringify(sucessMoviesToUpload), 'utf8', function (err, data) {
+  fs.writeFile(getFileBaseName()+'.upload.success.json', JSON.stringify(sucessMoviesToUpload), 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
@@ -262,21 +267,21 @@ function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGe
   console.log('No of Records (Failed) Upload: '+failedMoviesToUpload.length);
 
   if (failedMoviesToUpload.length > 0) {
-    fs.writeFile('../upload/'+lang+'.'+Date.now()+'.upload.failed.json', JSON.stringify(failedMoviesToUpload), 'utf8', function (err, data) {
+    fs.writeFile(getFileBaseName()+'.upload.failed.json', JSON.stringify(failedMoviesToUpload), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
     });
   }
 
   console.log('No of Records (Success) Mp4 Url: '+sucessMoviesToGetMp4Url.length);
-  fs.writeFile('../upload/'+lang+'.'+Date.now()+'.mp4url.success.json', JSON.stringify(sucessMoviesToGetMp4Url), 'utf8', function (err, data) {
+  fs.writeFile(getFileBaseName()+'.mp4url.success.json', JSON.stringify(sucessMoviesToGetMp4Url), 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
 
   console.log('No of Records (Failed) Mp4 Url: '+failedMoviesToGetMp4Url.length);
   if (failedMoviesToGetMp4Url.length > 0) {
-    fs.writeFile('../upload/'+lang+'.'+Date.now()+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
+    fs.writeFile(getFileBaseName()+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
     });
