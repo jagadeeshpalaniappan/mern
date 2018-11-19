@@ -275,7 +275,7 @@ function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGe
   });
 
   console.log('No of Records (Failed) Mp4 Url: '+failedMoviesToGetMp4Url.length);
-  if (failedMoviesToUpload.length > 0) {
+  if (failedMoviesToGetMp4Url.length > 0) {
     fs.writeFile('../upload/'+lang+'.'+Date.now()+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
