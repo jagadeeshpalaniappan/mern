@@ -107,10 +107,7 @@ function getEachMovieAndUploadToS3(eachMovie) {
 
     console.log('U:' + eachMovie.enLink);
 
-    var enId = eachMovie.enLink.split('/')[3];
-    var lang = eachMovie.enLink.split('=')[1];
-    var iMovieId = enId ? cuid() + '$' + enId : cuid() + '$';
-    var keyName = lang ? iMovieId + '$' + lang : iMovieId;
+    var keyName = eachMovie.id + '.mp4';
 
     if (eachMovie && eachMovie.videoUrl && eachMovie.videoUrl['MP4Link']) {
 
@@ -257,10 +254,7 @@ function getAllMoviesAndUploadToS3 (allMovies) {
 function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url) {
 
   console.log('No of Records (Success) Upload: '+sucessMoviesToUpload.length);
-
-  const allMoviesByPageStr =JSON.stringify(sucessMoviesToUpload);
-
-  fs.writeFile('../upload/'+lang+'.upload.success.json', allMoviesByPageStr, 'utf8', function (err, data) {
+  fs.writeFile('../upload/'+lang+'.'+Date.now()+'.upload.success.json', JSON.stringify(sucessMoviesToUpload), 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
@@ -268,22 +262,21 @@ function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGe
   console.log('No of Records (Failed) Upload: '+failedMoviesToUpload.length);
 
   if (failedMoviesToUpload.length > 0) {
-    const failedMoviesStr =JSON.stringify(failedMoviesToUpload);
-    fs.writeFile('../upload/'+lang+'.upload.failed.json', failedMoviesStr, 'utf8', function (err, data) {
+    fs.writeFile('../upload/'+lang+'.'+Date.now()+'.upload.failed.json', JSON.stringify(failedMoviesToUpload), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
     });
   }
 
   console.log('No of Records (Success) Mp4 Url: '+sucessMoviesToGetMp4Url.length);
-  fs.writeFile('../upload/'+lang+'.mp4url.success.json', JSON.stringify(sucessMoviesToGetMp4Url), 'utf8', function (err, data) {
+  fs.writeFile('../upload/'+lang+'.'+Date.now()+'.mp4url.success.json', JSON.stringify(sucessMoviesToGetMp4Url), 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
 
   console.log('No of Records (Failed) Mp4 Url: '+failedMoviesToGetMp4Url.length);
   if (failedMoviesToUpload.length > 0) {
-    fs.writeFile('../upload/'+lang+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
+    fs.writeFile('../upload/'+lang+'.'+Date.now()+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
     });
