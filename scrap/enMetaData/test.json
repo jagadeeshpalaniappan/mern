@@ -62,6 +62,52 @@
       "hasCC": true,
       "professionals": [],
       "ratings": []
+    },
+    {
+      "enLink": "/movie-clip/watch/music-video/1O6TronI0w/4Mx6D07v3r/?lang=tamil",
+      "posterImgUrl": "//s3.amazonaws.com/einthusanthunderbolt/moviecovers/60de-78f4.jpg",
+      "title": "Kaaththamma",
+      "isMustWatch": false,
+      "year": "2015",
+      "lang": "Tamil",
+      "description": "Kathamma is directed by MD Sukumaran and featured Biju, Aathira and Ashok Raj as lead characters.",
+      "isHd": true,
+      "hasCC": true,
+      "professionals": [
+        {
+          "img": "//s3.amazonaws.com/einthusanthunderbolt/etc/img/default-img.png",
+          "name": "Aadhira",
+          "role": "Lead"
+        },
+        {
+          "img": "//s3.amazonaws.com/einthusanthunderbolt/etc/img/default-img.png",
+          "name": "Ashok Raj",
+          "role": "Lead"
+        },
+        {
+          "img": "//s3.amazonaws.com/einthusanthunderbolt/etc/img/default-img.png",
+          "name": "Biju Ram",
+          "role": "Supporting"
+        },
+        {
+          "img": "//s3.amazonaws.com/einthusanthunderbolt/etc/img/default-img.png",
+          "name": "MD Sukumaran",
+          "role": "Director"
+        },
+        {
+          "img": "//s3.amazonaws.com/einthusanthunderbolt/etc/img/default-img.png",
+          "name": "Jose M Thomas Roy",
+          "role": "Producer"
+        },
+        {
+          "img": "//s3.amazonaws.com/einthusanthunderbolt/etc/img/default-img.png",
+          "name": "Jillan",
+          "role": "Music Director"
+        }
+      ],
+      "ratings": [],
+      "wikiUrl": "https://www.moviebuff.com/kaaththamma",
+      "trailerUrl": "https://www.youtube.com/watch?v=vTzv58IfSxg"
     }
   ],
   "page2": [

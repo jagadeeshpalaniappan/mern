@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var tr = require('tor-request');
 var streamingS3 = require('streaming-s3');
 var request = require('request');
@@ -9,11 +11,11 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
   var uploader = new streamingS3(
     rStream,
     {
-      accessKeyId: 'AKIAJJJXGEXS35B7AE2A',
-      secretAccessKey: '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'
+      accessKeyId: process.env.AWSAccessKeyId,
+      secretAccessKey: process.env.AWSSecretKey,
     },
     {
-      Bucket: 'indiantv',
+      Bucket: process.env.S3BUCKET,
       Key: keyName,
       ACL:'public-read'
     },
