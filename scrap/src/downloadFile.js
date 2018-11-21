@@ -2,6 +2,10 @@ var request = require('request');
 var tr = require('tor-request');
 tr.TorControlPort.password = 'hellopassword';
 
+// torrc
+// ControlPort 9051
+// HashedControlPassword 16:96598ADABFEBE9A7604A6F916260695A4D954993DF02A0DE3E910D7288
+
 var fs = require('fs');
 
 function download(srcUrl, destLoc, fileName) {
