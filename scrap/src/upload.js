@@ -3,7 +3,8 @@ const cuid = require('cuid');
 var promiseLimit = require('promise-limit');
 
 const {getPageVideoUrl} = require('./geturl');
-const {getBytesAndUploadToS3} = require('./uploadToS3');
+// const {getBytesAndUploadToS3} = require('./uploadToS3');
+const {getBytesAndUploadToS3} = require('./uploadLargeFileToS3');
 
 const args = process.argv.slice(2);
 const lang = args[0];
