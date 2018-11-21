@@ -27,7 +27,7 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
   });
 
 // Optional configuration
-// upload.maxPartSize(20971520); // 20 MB
+  upload.maxPartSize(209715200); // 20 MB
   upload.concurrentParts(5);
 
 // Handle errors.
