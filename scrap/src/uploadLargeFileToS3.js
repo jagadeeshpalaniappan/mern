@@ -43,7 +43,8 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
        uploadedSize: 29671068 }
   */
   upload.on('part', function (details) {
-    console.log(details);
+    // console.log(details);
+    console.log('.');
   });
 
   /* Handle upload completion. Example details object:
@@ -53,7 +54,7 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
        ETag: '"bf2acbedf84207d696c8da7dbb205b9f-5"' }
   */
   upload.on('uploaded', function (resp) {
-    console.log(resp);
+    // console.log(resp);
     resolve({ srcUrl: srcUrl, keyName: keyName, resp: resp, isSucess: true});
   });
 
