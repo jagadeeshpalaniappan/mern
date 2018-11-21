@@ -44,7 +44,7 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
   */
   upload.on('part', function (details) {
     // console.log(details);
-    process.stdout.write(".");
+    // process.stdout.write(".");
   });
 
   /* Handle upload completion. Example details object:
