@@ -266,7 +266,7 @@ function getAllMoviesAndUploadToS3 (allMovies) {
 
 
 function getFileBaseName() {
-  return '../upload/'+lang+'.p.'+pageNo+'.'+Date.now();
+  return '../upload/'+lang+'.p.'+pageNo;
 }
 
 
