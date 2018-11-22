@@ -1,5 +1,5 @@
-var tr = require('tor-request');
-// var r = require('request');
+// var tr = require('tor-request');
+var r = require('request');
 
 
 var AWS      = require('aws-sdk');
@@ -9,8 +9,8 @@ s3Stream = require('s3-upload-stream')(new AWS.S3());
 // AWS.config.loadFromPath('./config.json');
 AWS.config.update({accessKeyId: process.env.AWSAccessKeyId, secretAccessKey: process.env.AWSSecretKey});
 
-tr.TorControlPort.password = 'hellopassword';
-
+// tr.TorControlPort.password = 'hellopassword';
+var tr = { request: r };
 
 
 
