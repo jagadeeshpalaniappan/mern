@@ -1,5 +1,5 @@
 // var tr = require('tor-request');
-var r = require('request');
+var request = require('request');
 
 
 var AWS      = require('aws-sdk');
@@ -10,7 +10,7 @@ s3Stream = require('s3-upload-stream')(new AWS.S3());
 AWS.config.update({accessKeyId: process.env.AWSAccessKeyId, secretAccessKey: process.env.AWSSecretKey});
 
 // tr.TorControlPort.password = 'hellopassword';
-var tr = { request: r };
+// var tr = { request: request };
 
 
 
@@ -27,7 +27,7 @@ function uploadToS3(rStream, srcUrl, keyName, resolve, reject) {
   });
 
 // Optional configuration
-  upload.maxPartSize(109715200); // 20 MB
+  upload.maxPartSize(50971520); // 50 MB
   upload.concurrentParts(5);
 
 // Handle errors.
@@ -76,17 +76,7 @@ function getBytesAndUploadToS3(srcUrl, keyName) {
       "method": "GET",
     };
 
-    var rStream1 = tr.request(options, function (err, res, body) {
-      if (!err && res.statusCode == 200) {
-        // resolve(body);
-        console.log('MP4-CONNECT:DONE');
-      } else {
-        // resolve(err);
-        console.log('MP4-CONNECT:ERR');
-        // console.log(err);
-      }
-    });
-
+    var rStream1 = request(options);
     uploadToS3(rStream1, srcUrl, keyName, resolve, reject);
 
 
