@@ -113,7 +113,7 @@ export function addMovie(req, res) {
  * @returns void
  */
 export function getMovie(req, res) {
-  Movie.findOne({ id: req.params.cuid }).exec((err, movie) => {
+  Movie.findOne({ id: req.params.id }).exec((err, movie) => {
     if (err) {
       res.status(500).send(err);
     }
