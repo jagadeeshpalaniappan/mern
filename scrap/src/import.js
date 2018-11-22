@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-const MovieTest = require("./movietest");
+const Movie = require("./movietest");
 
 const fs = require('fs');
 const args = process.argv.slice(2);
@@ -55,7 +55,7 @@ function readFileAsync(path) {
 function createMovie(movie) {
   return new Promise(function (resolve, reject) {
 
-    const newMovie = new MovieTest(movie.eachMovie);
+    const newMovie = new Movie(movie.eachMovie);
     newMovie.videoUrl = movie.eachMovie.id + '.mp4';
     newMovie.language = movie.eachMovie.lang;
     const eid = movie.eachMovie.enLink.split("/")[3];
