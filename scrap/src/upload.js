@@ -12,6 +12,9 @@ const args = process.argv.slice(2);
 const lang = args[0];
 const pageNo = args[1];
 
+var currentPageNo = 0;
+var LAST_PAGE_NO = 214;
+
 
 
 /*
@@ -24,11 +27,33 @@ function timeout(ms) {
 
 
 
-function getRequiredMovies(tamilMovies) {
-  var pageNoStr = 'page'+pageNo;
+
+
+
+function getRequiredMovies(tamilMovies, eachPageNo) {
+  var pageNoStr = 'page'+eachPageNo;
   return tamilMovies[pageNoStr];
 }
 
+
+
+async function processEachPage(tamilMovies) {
+
+  // var allkeys = Object.keys(tamilMovies);
+
+  for (var i=pageNo; i<= 214; i++) {
+
+    currentPageNo = i;
+
+    const allMovies = getRequiredMovies(tamilMovies, i);
+
+    if(allMovies && allMovies.length > 0) {
+      console.log('######## currentPageNo: '+ i +' --No of Records to Process: '+allMovies.length +'########');
+      await getMp4VideoUrl(allMovies);
+    }
+
+  }
+}
 
 
 
@@ -39,12 +64,7 @@ function readFile() {
   fs.readFile('../enMetaData/'+lang+'.json', (err, data) => {
     if (err) throw err;
     let tamilMovies = JSON.parse(data);
-    const allMovies = getRequiredMovies(tamilMovies);
-
-    console.log('No of Records to Process: '+allMovies.length);
-
-    getMp4VideoUrl(allMovies);
-
+    processEachPage(tamilMovies);
   });
 
 }
@@ -266,7 +286,7 @@ function getAllMoviesAndUploadToS3 (allMovies) {
 
 
 function getFileBaseName() {
-  return '../upload/'+lang+'.p.'+pageNo;
+  return '../upload/'+lang+'.p.'+currentPageNo;
 }
 
 
