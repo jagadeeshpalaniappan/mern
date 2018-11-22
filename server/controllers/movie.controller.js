@@ -113,6 +113,9 @@ export function addMovie(req, res) {
  * @returns void
  */
 export function getMovie(req, res) {
+
+  console.log('### req.params.id:', req.params.id);
+
   Movie.findOne({ id: req.params.id }).exec((err, movie) => {
     if (err) {
       res.status(500).send(err);
