@@ -66,8 +66,9 @@ async function getMp4VideoUrl (allMovies) {
         const url = 'https://einthusan.tv' + eachMovie.enLink;
 
         console.log((count) + '--------------'+url);
-        // const eachMovieVideoUrl = await getPageVideoUrl(url);
+        const eachMovieVideoUrl = await getPageVideoUrl(url);
 
+        /*
         const eachMovieVideoUrl = {
           "MP4Link": "https://s3-us-west-2.amazonaws.com/indiantv/cjorbezcy00001qqmc7931keo.mp4",
           "HLSLink": "https://s19.einthusan.tv/einthusancom/hot/DzAq4.mp4.m3u8?e=1542876154&md5=y5ErhYvnUC7ZL1xWQz42nw",
@@ -75,6 +76,7 @@ async function getMp4VideoUrl (allMovies) {
           "Premium": false,
           "V": 1
         };
+        */
 
         eachMovie.videoUrl = eachMovieVideoUrl;
         console.log(eachMovieVideoUrl);
