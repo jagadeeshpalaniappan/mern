@@ -1,4 +1,4 @@
-var tr = require('tor-request');
+// var tr = require('tor-request');
 var request = require('request');
 var rp = require('request-promise');
 var cheerio = require('cheerio');
@@ -7,7 +7,7 @@ var fs = require('fs');
 var querystring = require('querystring');
 
 
-tr.TorControlPort.password = 'hellopassword';
+// tr.TorControlPort.password = 'hellopassword';
 
 function getHtmlContent(url, cookieJar) {
 
@@ -20,11 +20,11 @@ function getHtmlContent(url, cookieJar) {
       jar: cookieJar
     };
 
-    tr.newTorSession((err) => {
+    // tr.newTorSession((err) => {
 
       // console.log(err);
 
-      tr.request(options, function (err, res, body) {
+      request(options, function (err, res, body) {
         if (!err && res.statusCode == 200) {
           resolve(body);
         } else {
@@ -34,7 +34,7 @@ function getHtmlContent(url, cookieJar) {
 
     });
 
-  });
+  // });
 
   // return rp(options);
 }
@@ -98,7 +98,7 @@ function getEncodedUrl(csrfToken, ejpingables, movie_page_url, cookieJar) {
   // return rp(options);
 
   return new Promise(function (resolve, reject) {
-    tr.request(options, function (err, res, body) {
+    request(options, function (err, res, body) {
       if (!err && res.statusCode == 200) {
         resolve(body);
       } else {
