@@ -114,7 +114,7 @@ export function addMovie(req, res) {
  */
 export function getMovie(req, res) {
 
-  console.log('### req.params.id:', req.params.id);
+  // console.log('### req.params.id:', req.params.id);
 
   Movie.findOne({ id: req.params.id }).exec((err, movie) => {
     if (err) {

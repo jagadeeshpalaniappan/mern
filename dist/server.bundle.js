@@ -2622,7 +2622,10 @@ function addMovie(req, res) {
  * @returns void
  */
 function getMovie(req, res) {
-  _movie2.default.findOne({ id: req.params.cuid }).exec(function (err, movie) {
+
+  // console.log('### req.params.id:', req.params.id);
+
+  _movie2.default.findOne({ id: req.params.id }).exec(function (err, movie) {
     if (err) {
       res.status(500).send(err);
     }
