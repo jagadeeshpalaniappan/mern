@@ -5,6 +5,8 @@ var promiseLimit = require('promise-limit');
 const {getPageVideoUrl} = require('./geturl');
 // const {getBytesAndUploadToS3} = require('./uploadToS3');
 const {getBytesAndUploadToS3} = require('./uploadLargeFileToS3');
+const {sendEmail} = require('./email');
+
 
 const args = process.argv.slice(2);
 const lang = args[0];
@@ -132,11 +134,13 @@ function getEachMovieAndUploadToS3(eachMovie) {
       getBytesAndUploadToS3(srcUrl, keyName)
         .then(function (obj) {
           console.log('UPLOAD: DONE');
+          send({eachMovie: eachMovie, isSucess: true, obj: obj });
           resolve({eachMovie: eachMovie, isSucess: true });
         })
         .catch(function (obj) {
           console.log('UPLOAD: ERR');
-          reject({eachMovie: eachMovie, isSucess: false });
+          send({eachMovie: eachMovie, isSucess: false, obj: obj });
+          reject({eachMovie: eachMovie, isSucess: false, obj: obj });
         });
 
     } else {
@@ -296,6 +300,23 @@ function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGe
       console.log('WRITE: FAILURE DONE');
     });
   }
+}
+
+
+function send(obj) {
+  var subj = obj.isSucess ? 'Upload DONE' : 'Upload ERR';
+  // send: email (success upload)
+  sendEmail('jaganttpus@gmail.com',
+    'jagadeeshthegeek@gmail.com',
+    subj,
+    JSON.stringify(obj)
+  )
+    .then(function (info) {
+      console.log('EMAIL: DONE');
+    })
+    .catch(function (err) {
+      console.log('EMAIL: ERR');
+    });
 }
 
 
