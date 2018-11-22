@@ -104,6 +104,7 @@ async function getMp4VideoUrl (allMovies) {
         console.log(eachMovieVideoUrl);
 
         eachMovie.id  = cuid();
+        console.log('**MOVIE ID:'+eachMovie.id);
 
         sucessMoviesToGetMp4Url.push(eachMovie);
 
