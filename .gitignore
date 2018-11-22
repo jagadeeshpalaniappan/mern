@@ -80,5 +80,7 @@ typings/
 
 
 scrap/upload
+scrap/upload-old
+
 scrap/downloadStatus
 config.env
