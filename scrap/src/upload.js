@@ -10,9 +10,9 @@ const {sendEmail} = require('./email');
 
 const args = process.argv.slice(2);
 const lang = args[0];
-const pageNo = args[1];
+const pageNo = Number(args[1]);
 
-var currentPageNo = 0;
+var currentPageNo = pageNo;
 var LAST_PAGE_NO = 214;
 
 
