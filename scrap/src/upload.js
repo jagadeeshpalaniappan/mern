@@ -347,7 +347,7 @@ function sendPageNo(currentPageNo) {
   // send: email (success upload)
   sendEmail('jaganttpus@gmail.com',
     'jagadeeshthegeek@gmail.com',
-    'PAGE: '+currentPageNo + ' STARTED',
+    'PAGE: STARTED',
     'PAGE: '+currentPageNo + ' STARTED'
   ).then(function (info) {
       // console.log('EMAIL: DONE');
