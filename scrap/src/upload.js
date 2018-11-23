@@ -348,7 +348,7 @@ function sendPageNo(currentPageNo) {
   sendEmail('jaganttpus@gmail.com',
     'jagadeeshthegeek@gmail.com',
     'PAGE: '+currentPageNo + ' STARTED',
-    JSON.stringify(obj)
+    'PAGE: '+currentPageNo + ' STARTED'
   ).then(function (info) {
       // console.log('EMAIL: DONE');
     })
