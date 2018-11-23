@@ -45,11 +45,13 @@ async function processEachPage(tamilMovies) {
 
     currentPageNo = i;
 
+    sendPageNo(currentPageNo);
+
     const allMovies = getRequiredMovies(tamilMovies, i);
 
     if(allMovies && allMovies.length > 0) {
       console.log('######## currentPageNo: '+ i +' --No of Records to Process: '+allMovies.length +'########');
-      await getMp4VideoUrl(allMovies);
+      await getMp4VideoUrl(allMovies, currentPageNo);
     }
 
   }
@@ -70,7 +72,7 @@ function readFile() {
 }
 
 
-async function getMp4VideoUrl (allMovies) {
+async function getMp4VideoUrl (allMovies, currentPageNo) {
 
   const sucessMoviesToGetMp4Url = [];
   const failedMoviesToGetMp4Url = [];
@@ -133,7 +135,7 @@ async function getMp4VideoUrl (allMovies) {
 
   }
 
-  writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url);
+  writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url, currentPageNo);
 
 }
 
@@ -286,15 +288,15 @@ function getAllMoviesAndUploadToS3 (allMovies) {
 
 
 
-function getFileBaseName() {
+function getFileBaseName(currentPageNo) {
   return '../upload/'+lang+'.p.'+currentPageNo;
 }
 
 
-function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url) {
+function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGetMp4Url, failedMoviesToGetMp4Url, currentPageNo) {
 
   console.log('No of Records (Success) Upload: '+sucessMoviesToUpload.length);
-  fs.writeFile(getFileBaseName()+'.upload.success.json', JSON.stringify(sucessMoviesToUpload), 'utf8', function (err, data) {
+  fs.writeFile(getFileBaseName(currentPageNo)+'.upload.success.json', JSON.stringify(sucessMoviesToUpload), 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
@@ -302,21 +304,21 @@ function writeMovie(sucessMoviesToUpload, failedMoviesToUpload, sucessMoviesToGe
   console.log('No of Records (Failed) Upload: '+failedMoviesToUpload.length);
 
   if (failedMoviesToUpload.length > 0) {
-    fs.writeFile(getFileBaseName()+'.upload.failed.json', JSON.stringify(failedMoviesToUpload), 'utf8', function (err, data) {
+    fs.writeFile(getFileBaseName(currentPageNo)+'.upload.failed.json', JSON.stringify(failedMoviesToUpload), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
     });
   }
 
   console.log('No of Records (Success) Mp4 Url: '+sucessMoviesToGetMp4Url.length);
-  fs.writeFile(getFileBaseName()+'.mp4url.success.json', JSON.stringify(sucessMoviesToGetMp4Url), 'utf8', function (err, data) {
+  fs.writeFile(getFileBaseName(currentPageNo)+'.mp4url.success.json', JSON.stringify(sucessMoviesToGetMp4Url), 'utf8', function (err, data) {
     if (err) throw err;
     console.log('WRITE: DONE');
   });
 
   console.log('No of Records (Failed) Mp4 Url: '+failedMoviesToGetMp4Url.length);
   if (failedMoviesToGetMp4Url.length > 0) {
-    fs.writeFile(getFileBaseName()+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
+    fs.writeFile(getFileBaseName(currentPageNo)+'.mp4url.failed.json', JSON.stringify(failedMoviesToGetMp4Url), 'utf8', function (err, data) {
       if (err) throw err;
       console.log('WRITE: FAILURE DONE');
     });
@@ -337,6 +339,21 @@ function send(obj) {
     })
     .catch(function (err) {
       console.log('EMAIL: ERR');
+    });
+}
+
+
+function sendPageNo(currentPageNo) {
+  // send: email (success upload)
+  sendEmail('jaganttpus@gmail.com',
+    'jagadeeshthegeek@gmail.com',
+    'PAGE: '+currentPageNo + ' STARTED',
+    JSON.stringify(obj)
+  ).then(function (info) {
+      // console.log('EMAIL: DONE');
+    })
+    .catch(function (err) {
+      // console.log('EMAIL: ERR');
     });
 }
 
