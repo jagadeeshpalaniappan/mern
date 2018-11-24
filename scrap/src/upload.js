@@ -201,7 +201,7 @@ function getEachMovieAndUploadToS3(eachMovie) {
 
       var srcUrl = eachMovie.videoUrl['MP4Link'];
 
-      console.log('UPLOAD: START');
+      console.log('UPLOAD: START', keyName);
 
       getBytesAndUploadToS3(srcUrl, keyName)
         .then(function (obj) {
