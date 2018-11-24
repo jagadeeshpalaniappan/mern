@@ -68,13 +68,13 @@ async function processEachPage(tamilMovies) {
 
     if (currentPageNo > lastPorcessedPageNo) {
 
-      // sendPageNo(currentPageNo);
+      sendPageNo(currentPageNo);
 
       const allMovies = getRequiredMovies(tamilMovies, currentPageNo);
 
       if(allMovies && allMovies.length > 0) {
         console.log('######## currentPageNo: '+ currentPageNo +' --No of Records to Process: '+allMovies.length +'########');
-        // await getMp4VideoUrl(allMovies, currentPageNo);
+        await getMp4VideoUrl(allMovies, currentPageNo);
       }
 
       currentPageNo++;
