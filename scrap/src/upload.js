@@ -12,7 +12,7 @@ const args = process.argv.slice(2);
 const lang = args[0];
 const pageNo = Number(args[1]);
 
-var currentPageNo = pageNo;
+// var currentPageNo = pageNo;
 var LAST_PAGE_NO = 214;
 
 
@@ -36,10 +36,57 @@ function getRequiredMovies(tamilMovies, eachPageNo) {
 }
 
 
+function getLastPorcessedPageNo(pageNo) {
+
+  let maxVal = pageNo;
+
+  fs.readdirSync('../upload/')
+    .forEach(file => {
+      const processedFilePageNo = Number(file.split('.')[2]);
+      if (!isNaN(processedFilePageNo)) {
+        maxVal = Math.max(maxVal, processedFilePageNo)
+      }
+  });
+
+  // console.log(maxVal);
+
+  return maxVal
+
+}
+
 
 async function processEachPage(tamilMovies) {
 
   // var allkeys = Object.keys(tamilMovies);
+
+  let currentPageNo = pageNo;
+  while (currentPageNo<=LAST_PAGE_NO) {
+
+    const lastPorcessedPageNo = getLastPorcessedPageNo(pageNo);
+
+    // console.log('######## currentPageNo: '+ currentPageNo);
+
+    if (currentPageNo > lastPorcessedPageNo) {
+
+      // sendPageNo(currentPageNo);
+
+      const allMovies = getRequiredMovies(tamilMovies, currentPageNo);
+
+      if(allMovies && allMovies.length > 0) {
+        console.log('######## currentPageNo: '+ currentPageNo +' --No of Records to Process: '+allMovies.length +'########');
+        // await getMp4VideoUrl(allMovies, currentPageNo);
+      }
+
+      currentPageNo++;
+    } else {
+      currentPageNo = lastPorcessedPageNo + 1;
+    }
+
+    console.log('######## (nextPageNo,lastPorcessedPageNo) : '+ currentPageNo, lastPorcessedPageNo);
+  }
+
+
+  /*
 
   for (var i=pageNo; i<= 214; i++) {
 
@@ -51,10 +98,12 @@ async function processEachPage(tamilMovies) {
 
     if(allMovies && allMovies.length > 0) {
       console.log('######## currentPageNo: '+ i +' --No of Records to Process: '+allMovies.length +'########');
-      await getMp4VideoUrl(allMovies, currentPageNo);
+      // await getMp4VideoUrl(allMovies, currentPageNo);
     }
 
   }
+  */
+
 }
 
 
