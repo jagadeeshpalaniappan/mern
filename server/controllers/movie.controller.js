@@ -4,6 +4,7 @@ import cuid from 'cuid';
 import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
 import Post from "../models/post";
+import {fetchMovieUrlFromSrc} from '../util/fetchFromSrc';
 
 /**
  * Get all movies
@@ -16,7 +17,16 @@ export function getMovies(req, res) {
     if (err) {
       res.status(500).send(err);
     }
-    res.json({ movies });
+
+    // const movies = moviesResp.map((m)=> {
+    //   const { _id, ...movie } = m;
+    //   return { id: m.title, title: m.title, description: m.title };
+    // });
+
+    // console.log(movies);
+
+
+    res.json({movies});
   });
 }
 
@@ -102,7 +112,7 @@ export function addMovie(req, res) {
 
       res.status(500).send(err);
     }
-    res.json({ movie: saved });
+    res.json({movie: saved});
   });
 }
 
@@ -116,13 +126,51 @@ export function getMovie(req, res) {
 
   // console.log('### req.params.id:', req.params.id);
 
-  Movie.findOne({ id: req.params.id }).exec((err, movie) => {
+  Movie.findOne({id: req.params.id}).exec((err, movie) => {
     if (err) {
       res.status(500).send(err);
     }
-    res.json({ movie });
+    res.json({movie});
   });
 }
+
+
+/**
+ * Get a single movie URL from source
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getMovieUrlFromSrc(req, res) {
+
+  console.log('### req.params.id:', req.params.id);
+
+  Movie.findOne({id: req.params.id}).lean().exec((err, movie) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    console.log('### movie.sInfo:', movie.sInfo);
+
+    fetchMovieUrlFromSrc(movie.sInfo)
+      .then(function (movieUrl) {
+
+        console.log('### success:', movieUrl);
+
+        res.json({movieUrl});
+
+      }).catch(function (err) {
+
+      console.log('### err:', err);
+
+      res.status(500).send(err);
+
+    });
+
+
+  });
+}
+
 
 /**
  * Delete a movie
@@ -131,7 +179,7 @@ export function getMovie(req, res) {
  * @returns void
  */
 export function deleteMovie(req, res) {
-  Movie.findOne({ id: req.params.id }).exec((err, movie) => {
+  Movie.findOne({id: req.params.id}).exec((err, movie) => {
     if (err) {
       res.status(500).send(err);
     }
