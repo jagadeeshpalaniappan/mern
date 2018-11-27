@@ -903,7 +903,7 @@ var _movie = __webpack_require__(60);
 
 var _movie2 = _interopRequireDefault(_movie);
 
-var _dummyData = __webpack_require__(63);
+var _dummyData = __webpack_require__(71);
 
 var _dummyData2 = _interopRequireDefault(_dummyData);
 
@@ -926,11 +926,11 @@ if (isDevMode) {
   // eslint-disable-next-line global-require
   var webpack = __webpack_require__(24);
   // eslint-disable-next-line global-require
-  var config = __webpack_require__(64);
+  var config = __webpack_require__(72);
   // eslint-disable-next-line global-require
-  var webpackDevMiddleware = __webpack_require__(68);
+  var webpackDevMiddleware = __webpack_require__(76);
   // eslint-disable-next-line global-require
-  var webpackHotMiddleware = __webpack_require__(69);
+  var webpackHotMiddleware = __webpack_require__(77);
   var compiler = webpack(config);
   app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
@@ -2490,6 +2490,7 @@ router.route('/movies').get(MovieController.getMovies);
 
 // Get one post by id
 router.route('/movies/:id').get(MovieController.getMovie);
+router.route('/movieUrl/:id/').get(MovieController.getMovieUrlFromSrc);
 
 // Add a new Post
 router.route('/movies').post(MovieController.addMovie);
@@ -2512,6 +2513,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.getMovies = getMovies;
 exports.addMovie = addMovie;
 exports.getMovie = getMovie;
+exports.getMovieUrlFromSrc = getMovieUrlFromSrc;
 exports.deleteMovie = deleteMovie;
 
 var _movie = __webpack_require__(62);
@@ -2534,6 +2536,8 @@ var _post = __webpack_require__(11);
 
 var _post2 = _interopRequireDefault(_post);
 
+var _fetchFromSrc = __webpack_require__(63);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -2542,15 +2546,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param res
  * @returns void
  */
+// import Movie from '../models/movie';
 function getMovies(req, res) {
   _movie2.default.find().sort('-dateAdded').exec(function (err, movies) {
     if (err) {
       res.status(500).send(err);
     }
+
+    // const movies = moviesResp.map((m)=> {
+    //   const { _id, ...movie } = m;
+    //   return { id: m.title, title: m.title, description: m.title };
+    // });
+
+    // console.log(movies);
+
+
     res.json({ movies: movies });
   });
-} // import Movie from '../models/movie';
-
+}
 
 function getDummyMovie(id, title, directors, description) {
 
@@ -2630,6 +2643,37 @@ function getMovie(req, res) {
       res.status(500).send(err);
     }
     res.json({ movie: movie });
+  });
+}
+
+/**
+ * Get a single movie URL from source
+ * @param req
+ * @param res
+ * @returns void
+ */
+function getMovieUrlFromSrc(req, res) {
+
+  console.log('### req.params.id:', req.params.id);
+
+  _movie2.default.findOne({ id: req.params.id }).lean().exec(function (err, movie) {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    console.log('### movie.sInfo:', movie.sInfo);
+
+    (0, _fetchFromSrc.fetchMovieUrlFromSrc)(movie.sInfo).then(function (movieUrl) {
+
+      console.log('### success:', movieUrl);
+
+      res.json({ movieUrl: movieUrl });
+    }).catch(function (err) {
+
+      console.log('### err:', err);
+
+      res.status(500).send(err);
+    });
   });
 }
 
@@ -2726,6 +2770,263 @@ exports.default = _mongoose2.default.model('Movie', movieSchema);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.fetchMovieUrlFromSrc = fetchMovieUrlFromSrc;
+
+var _geturl = __webpack_require__(64);
+
+function fetchMovieUrlFromSrc(srcInfo) {
+
+  return new Promise(function (resolve, reject) {
+
+    var url = 'https://einthusan.tv' + srcInfo.link;
+    console.log('--------------' + url);
+
+    (0, _geturl.getPageVideoUrl)(url).then(function (eachMovieVideoUrl) {
+
+      /*
+      const eachMovieVideoUrl = {
+        "MP4Link": "https://s3-us-west-2.amazonaws.com/indiantv/cjorbezcy00001qqmc7931keo.mp4",
+        "HLSLink": "https://s19.einthusan.tv/einthusancom/hot/DzAq4.mp4.m3u8?e=1542876154&md5=y5ErhYvnUC7ZL1xWQz42nw",
+        "Datacenter": "San",
+        "Premium": false,
+        "V": 1
+      };
+      */
+
+      resolve({ mp4: eachMovieVideoUrl['MP4Link'], hls: eachMovieVideoUrl['HLSLink'] });
+    }).catch(function (err) {
+
+      reject({ err: 'ERR OCCURRED TO GET URL FROM SRC' });
+    });
+  });
+} /*
+  Utility function to fetch required data for ....
+  
+  */
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var request = __webpack_require__(65);
+var rp = __webpack_require__(66);
+var cheerio = __webpack_require__(67);
+var zlib = __webpack_require__(68);
+var fs = __webpack_require__(69);
+var querystring = __webpack_require__(70);
+
+function getHtmlContent(url, cookieJar) {
+
+  return new Promise(function (resolve, reject) {
+
+    var options = {
+      "url": url,
+      "gzip": true,
+      "method": "GET",
+      jar: cookieJar
+    };
+
+    // tr.newTorSession((err) => {
+
+    // console.log(err);
+
+    request(options, function (err, res, body) {
+      if (!err && res.statusCode == 200) {
+        resolve(body);
+      } else {
+        resolve(err);
+      }
+    });
+  });
+
+  // });
+
+  // return rp(options);
+}
+
+function parseHTML(body) {
+
+  // // console.log(body);
+
+  var $ = cheerio.load(body);
+
+  // page_id = page.find('html')['data-pageid']
+  var html = $("html[data-pageid]");
+  var page_id = html.data('pageid');
+  // console.log("page_id: " + page_id);
+
+  var UIVideoPlayer = $("#UIVideoPlayer");
+  var ejpingables = UIVideoPlayer.data('ejpingables');
+  // console.log("ejpingables: " + ejpingables);
+
+
+  return { csrfToken: page_id, ejpingables: ejpingables };
+}
+
+function getEncodedUrl(csrfToken, ejpingables, movie_page_url, cookieJar) {
+
+  var movie_meta_url = movie_page_url.replace('movie', 'ajax/movie');
+  // console.log("movie_meta_url: " + movie_meta_url);
+
+  var payload = {
+    'xEvent': 'UIVideoPlayer.PingOutcome',
+    'xJson': '{\"EJOutcomes\":\"' + ejpingables + '\",\"NativeHLS\":false}',
+    'gorilla.csrf.Token': csrfToken
+  };
+
+  // encoded_url = session.post(movie_meta_url, data=payload).json()['Data']['EJLinks'];
+  var formData = querystring.stringify(payload);
+  var contentLength = formData.length;
+
+  // console.log("formData: " + formData);
+
+
+  // const headers = res.headers;
+  var headers = {};
+  headers['Content-Length'] = contentLength;
+  headers['Content-Type'] = 'application/x-www-form-urlencoded';
+
+  // console.log(headers);
+
+
+  var options = {
+    headers: headers,
+    url: movie_meta_url,
+    body: formData,
+    method: 'POST',
+    json: true,
+    jar: cookieJar
+  };
+
+  // return rp(options);
+
+  return new Promise(function (resolve, reject) {
+    request(options, function (err, res, body) {
+      if (!err && res.statusCode == 200) {
+        resolve(body);
+      } else {
+        resolve(err);
+      }
+    });
+  });
+}
+
+var jsoncrypto = function jsoncrypto() {
+  var e = function e(_e) {
+    for (var t = "", i = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = 0; n < _e; n++) {
+      t += i.charAt(Math.floor(Math.random() * i.length));
+    }return t;
+  };
+  this.decrypt = function (e) {
+    var t = 10,
+        i = e.slice(0, t) + e.slice(e.length - 1) + e.slice(t + 2, e.length - 1)
+    // , n = window.atob(i);
+    ,
+        n = Buffer.from(i, 'base64').toString();
+    return JSON.parse(n);
+  }, this.encrypt = function (t) {
+    var i = 10,
+        n = JSON.stringify(t)
+    // , o = window.btoa(n);
+    ,
+        o = Buffer.from(n).toString('base64');
+    return o.slice(0, i) + e(2) + o.slice(i + 1) + o.slice(i, i + 1);
+  };
+};
+
+function decodeUrl(encodedJson) {
+  return new jsoncrypto().decrypt(encodedJson);
+}
+
+function getPageVideoUrl(url) {
+
+  return new Promise(function (resolve, reject) {
+
+    var cookieJar = request.jar();
+
+    getHtmlContent(url, cookieJar).then(function (body) {
+
+      console.log("GET: success");
+      // // console.log(html);
+
+      var parsedConfig = parseHTML(body);
+
+      getEncodedUrl(parsedConfig.csrfToken, parsedConfig.ejpingables, url, cookieJar).then(function (body) {
+
+        // console.log("POST: success");
+        // console.log(body);
+
+        if (body && body['Data'] && body['Data']['EJLinks']) {
+          var encodedUrl = body['Data']['EJLinks'];
+          // console.log("got: encodedUrl");
+          var decodedUrlConfig = decodeUrl(encodedUrl);
+          // console.log(decodedUrlConfig);
+          resolve(decodedUrlConfig);
+        } else {
+          reject(body);
+        }
+      }).catch(function (err) {
+        // console.log("POST: err", err);
+        reject(err);
+      });
+    }).catch(function (err) {
+      // console.log("GET: err", err);
+      reject(err);
+    });
+  });
+}
+
+module.exports.getPageVideoUrl = getPageVideoUrl;
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports) {
+
+module.exports = require("request");
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports) {
+
+module.exports = require("request-promise");
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports) {
+
+module.exports = require("cheerio");
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports) {
+
+module.exports = require("zlib");
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports) {
+
+module.exports = require("querystring");
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 exports.default = function () {
   _post2.default.count().exec(function (err, count) {
@@ -2755,16 +3056,16 @@ var _post2 = _interopRequireDefault(_post);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 64 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 
 var webpack = __webpack_require__(24);
-var cssnext = __webpack_require__(65);
-var postcssFocus = __webpack_require__(66);
-var postcssReporter = __webpack_require__(67);
+var cssnext = __webpack_require__(73);
+var postcssFocus = __webpack_require__(74);
+var postcssReporter = __webpack_require__(75);
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
@@ -2844,31 +3145,31 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, ""))
 
 /***/ }),
-/* 65 */
+/* 73 */
 /***/ (function(module, exports) {
 
 module.exports = require("postcss-cssnext");
 
 /***/ }),
-/* 66 */
+/* 74 */
 /***/ (function(module, exports) {
 
 module.exports = require("postcss-focus");
 
 /***/ }),
-/* 67 */
+/* 75 */
 /***/ (function(module, exports) {
 
 module.exports = require("postcss-reporter");
 
 /***/ }),
-/* 68 */
+/* 76 */
 /***/ (function(module, exports) {
 
 module.exports = require("webpack-dev-middleware");
 
 /***/ }),
-/* 69 */
+/* 77 */
 /***/ (function(module, exports) {
 
 module.exports = require("webpack-hot-middleware");
