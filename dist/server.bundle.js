@@ -969,6 +969,13 @@ app.use((0, _compression2.default)());
 app.use(_bodyParser2.default.json({ limit: '20mb' }));
 app.use(_bodyParser2.default.urlencoded({ limit: '20mb', extended: false }));
 app.use(_express2.default.static(_path2.default.resolve(__dirname, '../dist/client')));
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.use('/api', _post2.default);
 app.use('/api', _movie2.default);
 
