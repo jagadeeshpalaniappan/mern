@@ -18,4 +18,6 @@ router.route('/movies/:id').delete(MovieController.deleteMovie);
 
 router.route('/movies/pxy/*').get(MovieController.proxyMovies);
 
+router.route('/movies/test/*').get(MovieController.testMovies);
+
 export default router;

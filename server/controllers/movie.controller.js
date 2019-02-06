@@ -199,6 +199,36 @@ export function deleteMovie(req, res) {
  * @param res
  * @returns void
  */
+export function testMovies(req, res) {
+
+  var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+  console.log('## proxyMovies fullUrl: '+ fullUrl);
+
+  const srcUrl = req.originalUrl.split('/api/movies/pxy/')[1];
+  console.log('## proxyMovies srcUrl: '+ srcUrl);
+
+  const options = {
+    url: srcUrl,
+    headers: {
+      'Accept': '*/*',
+      'Cookie': '',
+      'Cache-Control': 'no-cache'
+    }
+  };
+  // console.log(options);
+  // req.pipe(request(options)).pipe(res);
+
+
+  res.json(options);
+
+}
+
+/**
+ * proxy Movies
+ * @param req
+ * @param res
+ * @returns void
+ */
 export function proxyMovies(req, res) {
 
   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
