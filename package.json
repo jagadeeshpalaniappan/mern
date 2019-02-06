@@ -173,7 +173,7 @@
     "webpack2-externals-plugin": "^1.0.0"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=11.2.0"
   },
   "ava": {
     "files": [
