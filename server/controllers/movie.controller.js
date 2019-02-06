@@ -5,6 +5,8 @@ import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
 import Post from "../models/post";
 import {fetchMovieUrlFromSrc} from '../util/fetchFromSrc';
+import request from "request";
+
 
 /**
  * Get all movies
@@ -188,4 +190,32 @@ export function deleteMovie(req, res) {
       res.status(200).end();
     });
   });
+}
+
+
+/**
+ * proxy Movies
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function proxyMovies(req, res) {
+
+  var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+  console.log('## proxyMovies fullUrl: '+ fullUrl);
+
+  const srcUrl = req.originalUrl.split('/api/movies/pxy/')[1];
+  console.log('## proxyMovies srcUrl: '+ srcUrl);
+
+  const options = {
+    url: srcUrl,
+    headers: {
+      'Accept': '*/*',
+      'Cookie': '',
+      'Cache-Control': 'no-cache'
+    }
+  };
+  // console.log(options);
+  req.pipe(request(options)).pipe(res);
+
 }

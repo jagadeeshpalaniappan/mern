@@ -15,4 +15,7 @@ router.route('/movies').post(MovieController.addMovie);
 // Delete a post by id
 router.route('/movies/:id').delete(MovieController.deleteMovie);
 
+
+router.route('/movies/pxy/*').get(MovieController.proxyMovies);
+
 export default router;
