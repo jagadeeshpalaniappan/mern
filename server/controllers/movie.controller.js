@@ -232,20 +232,36 @@ export function testMovies(req, res) {
 export function proxyMovies(req, res) {
 
   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  console.log('## proxyMovies fullUrl: '+ fullUrl);
+  console.log('## proxyMovies fullUrl: ' + fullUrl);
 
   const srcUrl = req.originalUrl.split('/api/movies/pxy/')[1];
-  console.log('## proxyMovies srcUrl: '+ srcUrl);
+  console.log('## proxyMovies srcUrl: ' + srcUrl);
+
+  const hostName = srcUrl.split('/')[2];
 
   const options = {
     url: srcUrl,
     headers: {
       'Accept': '*/*',
       'Cookie': '',
-      'Cache-Control': 'no-cache'
+      'Cache-Control': 'no-cache',
+      'Host': hostName,
+      'Origin': 'https://einthusan.tv',
+      'Referer': 'https://einthusan.tv/movie/watch/6nwh/?lang=tamil'
     }
   };
-  // console.log(options);
-  req.pipe(request(options)).pipe(res);
+
+
+  console.log(options);
+
+  const r = request(options);
+
+  r.on('response', function (response) {
+    console.log('statusCode: ' + response.statusCode); // 200
+    console.log(response.headers); // 'image/png'
+    console.log(response.body); // 'image/png'
+  });
+
+  req.pipe(r).pipe(res);
 
 }
