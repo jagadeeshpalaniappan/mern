@@ -265,3 +265,14 @@ export function proxyMovies(req, res) {
   req.pipe(r).pipe(res);
 
 }
+
+
+/**
+ * healthCheck
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function healthCheck(req, res) {
+  res.json({ status: 'working' });
+}
