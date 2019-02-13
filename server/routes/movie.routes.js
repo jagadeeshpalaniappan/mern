@@ -17,6 +17,6 @@ router.route('/movies/:id').delete(MovieController.deleteMovie);
 
 router.route('/pxymovies/*').get(MovieController.proxyMovies);
 
-router.route('/healthCheck/*').get(MovieController.healthCheck);
+router.route('/health/*').get(MovieController.healthCheck);
 
 export default router;
